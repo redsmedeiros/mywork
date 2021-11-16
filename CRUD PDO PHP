@@ -1,0 +1,110 @@
+
+			
+			<?php
+
+			//criar a classe de conexao
+			Class Conexao{
+				//variaveis glonais
+				private $pdo;
+
+				//construtor da conexao passando db, host, usuario e senha
+				public function __construct($dbname, $host, $user, $senha){
+					try {
+						
+						this->pdo = new PDO("mysql:dbname=".$dbname.";host=".$host,$user,$senha); 
+
+					} catch (PDOException $e) {
+						echo "Erro de conexão". $e->getMessage();
+						exit();
+
+					} catch (Exception $e) {
+						echo "Erro genérico". $e->getMessage();
+						exit();
+					}
+					
+				}
+
+				// Método para buscar os dados e colocar na tabela
+				public function buscarDados (){
+					//array de segurança
+					$res = array();
+					//variavel de comando com o select, ordenando em ordem decrescente por id
+					$cmd = $this->pdo->query("SELECT * FROM cadastro_cliente ORDER BY id_cliente DESC");
+					//criar variavel para passar formato de array
+					$res = $cmd->fetchAll(PDO::FETCH_ASSOC); //para economizar memoria
+
+					return $res; 
+				}
+
+				// método para cadastrar pessoa
+				public function cadastrarCliente($nome, $celular, $email, $cep, $cidade, $endereco, $numero, $complemento, $estado){
+					//verificar se o email ja está cadastrado
+					$cmd = $this->pdo->prepare("SELECT id_cliente FROM cadastro_cliente WHERE email_cliente = :e");
+					//colocar o marcador
+					$cmd->bindValue(":e", $email);
+					//executar o comando
+					$cmd->execute();
+					//verificação
+					if($cmd->rowCount() > 0){
+
+						return false; //email já cadastrado
+					}else{ //email não cadastrado, pode cadastrar
+
+						$cmd = $this->pdo->prepare("INSERT INTO cadastro_cliente (nome_cliente, celular_cliente, email_cliente, cep_cliente, cidade_cliente, endereco_cliente, numero_cliente, complemento, estado_cliente) VALUES(:a, :b, :c, :d, :e, :f, :g, :h, :i)");
+						$cmd->bindValue(":a", $nome);
+						$cmd->bindValue(":b", $celular);
+						$cmd->bindValue(":c", $email);
+						$cmd->bindValue(":d", $cep);
+						$cmd->bindValue(":e", $cidade);
+						$cmd->bindValue(":f", $endereco);
+						$cmd->bindValue(":g", $numero);
+						$cmd->bindValue(":h", $complemento);
+						$cmd->bindValue(":a", $estado);
+						$cmd->execute();
+						return true;
+					}
+
+
+				}
+
+				public function excluir($id){
+
+					$cmd = $this->pdo->prepare("DELETE FROM cadastro_cliente WHERE id_cliente = :id");
+					$cmd->bindValue(":id", $id);
+					$cmd->execute();
+				}
+
+				public function buscarCliente(){
+
+					$res = array();
+					$cmd = $this->pdo->prepare("SELECT * FROM cadastro_cliente WHERE id_cliente = :id");
+					$cmd->bindValue(":id", $id);
+					$cmd->execute();
+					//comando para se usar quando o retorno é um registro
+					$res = $cmd->fetch(PDO::FETCH_ASSOC);
+
+					return $res;
+
+
+				}
+
+				public function atualizar(){
+
+				}
+
+			}
+
+			?>
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+
