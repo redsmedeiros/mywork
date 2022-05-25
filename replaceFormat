@@ -1,0 +1,14 @@
+public replaceFormata(valor) {
+
+    if (valor === "") {
+      valor = 0;
+    } else {
+
+      valor = valor.replace(",", ".");
+      valor = parseFloat(valor);
+
+    }
+
+    return valor;
+    //0,9038581428571429
+  }
