@@ -1,0 +1,21 @@
+  convertCurrency(valor, dataCorrente, dataConversao) {
+    let valorConvertido = parseFloat(valor);
+    for (const currency of this.currencyList) {
+      const startDate = moment(currency.startDate);
+      const endDate = moment(currency.endDate);
+      if (dataCorrente > endDate) {
+        // já esta em uma data maior que a data que a moeda termina, procurar na proxima
+        continue;
+      } else if (startDate > dataConversao) {
+        // já ultrapassou a data de conversão, finalizar o calculo
+        break;
+      } else if (dataCorrente < endDate && dataCorrente >= startDate) {
+        // Propria Moeda, não há corte.
+        continue;
+      } else if (dataCorrente <= endDate) {
+        // Estamos na moeda seguinte, converter divindindo pelo indiceDeCorreção;
+        valorConvertido /= currency.indiceCorrecaoAnterior;
+      }
+    }
+    return valorConvertido;
+  }
