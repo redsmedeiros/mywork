@@ -1,0 +1,9 @@
+formatMoney(value, sigla = 'R$') {
+
+  
+    value = parseFloat(value);
+    
+    const numeroPadronizado = value.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+    return sigla + ' ' + numeroPadronizado;
+
+  }
