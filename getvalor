@@ -1,0 +1,17 @@
+  public getSalarioBeneficio(conclusoes) {
+
+    let valor = conclusoes[6].value
+
+    if (valor === "") {
+      valor = 0;
+    } else {
+      valor = valor.replace(".", "");
+      valor = valor.replace(",", ".");
+      valor = valor.replace("R", " ");
+      valor = valor.replace("$", " ");
+      valor = parseFloat(valor);
+    }
+
+
+    return valor;
+  }
