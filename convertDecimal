@@ -1,0 +1,15 @@
+public convertDecimalValue(valor) {
+
+    if (!isNaN(valor)) {
+      return valor;
+    }
+
+    if ((/\,/).test(valor)) {
+      valor = valor.replace('R$', '').replace(/\./g, '').replace(',', '.');
+    } else {
+      valor = valor.replace('R$', '');
+    }
+
+    return isNaN(valor) ? 0 : parseFloat(valor);
+
+  }
