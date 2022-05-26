@@ -1,0 +1,5 @@
+isExits(value) {
+    return (typeof value !== 'undefined' &&
+      value != null && value != 'null' &&
+      value !== undefined && value !== [] && value !== '[]') ? true : false;
+  }
