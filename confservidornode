@@ -1,0 +1,22 @@
+const express = require('express')
+const cors = require('cors')
+
+//MAIN FUNCTION
+const app = express()
+
+//CONFIG JASON RESPONSE
+app.use(express.json())
+
+//CONFIG SOLVE CORS
+app.use(cors({
+    credentials:true,
+    origin:'http://localhost/3000'
+}))
+
+//PUBLIC FOLDER FOR IMAGES
+app.use(express.static('public'))
+
+//ROUTES
+
+//LISTEN PORT
+app.listen(5000)
