@@ -1,0 +1,79 @@
+const User = require('../models/User')
+
+const bcrypt = require('bcrypt')
+
+module.exports = class UserController{
+
+    static async register(req, res) {
+
+        const name = req.body.name
+        const email = req.body.email
+        const phone = req.body.phone
+        const password = req.body.password
+        const confirmpassaword = req.body.confirmpassaword
+
+        //VALIDATIONS
+        if(!name){
+            res.status(422).json({message: "Nome Obrigatório!"})
+            return
+        }
+
+        if(!email){
+            res.status(422).json({message: "Email Obrigatório!"})
+            return
+        }
+
+        if(!phone){
+            res.status(422).json({message: "Phone Obrigatório!"})
+            return
+        }
+
+        if(!password){
+            res.status(422).json({message: "Password Obrigatório!"})
+            return
+        }
+
+        if(!confirmpassaword){
+            res.status(422).json({message: "confirm Obrigatório!"})
+            return
+        }
+
+        if(password !== confirmpassaword){
+            res.status(422).json({message: "Senha deve ser igual!"})
+            return
+        }
+
+        //CHECK IF USER EXIST
+        const userExists = await User.findOne({email: email})
+
+        if(userExists){
+            res.status(422).json({message: "Esse email já existe!"})
+            return
+        }
+
+        //CREATE A PASSWORD
+        const salt = await bcrypt.genSalt(12)
+        const passwordHash = await bcrypt.hash(password, salt)
+
+        //CREATE A USER
+        const user = new User({
+            name: name,
+            email: email,
+            phone: phone,
+            password: passwordHash
+        })
+
+        //SAVE USER
+        try{
+
+            const newUser = await user.save()
+
+            res.status(201).json({message: 'Usuario Criado'})
+
+        }catch(error){
+            res.status(500).json({message:error})
+        }
+
+    }
+
+}
